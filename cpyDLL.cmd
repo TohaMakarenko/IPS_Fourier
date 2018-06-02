@@ -1,0 +1,1 @@
+copy /y .\Release\* .\TryCallDLL\bin\Release\

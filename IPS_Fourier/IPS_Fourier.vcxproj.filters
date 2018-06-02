@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="IPS_Fourier.cpp">
+    <ClCompile Include="FFT.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>
