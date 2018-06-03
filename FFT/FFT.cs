@@ -5,144 +5,42 @@ namespace FFT
 {
     public static class FourierTransform
     {
-        /// <summary>
-        /// One dimensional Fast Fourier Transform.
-        /// </summary>
-        /// 
-        /// <param name="data">Data to transform.</param>
-        /// <param name="direction">Transformation direction.</param>
-        /// 
-        /// <remarks><para><note>The method accepts <paramref name="data"/> array of 2<sup>n</sup> size
-        /// only, where <b>n</b> may vary in the [1, 14] range.</note></para></remarks>
-        /// 
-        /// <exception cref="ArgumentException">Incorrect data length.</exception>
-        /// 
-        public static Complex[] FFT(Complex[] data)
+        public static Complex[] FFT(Complex[] a)
         {
-            int n = data.Length;
-            int m = Tools.Log2(n);
+            int n = a.Length;
+            int n2 = n / 2;
 
-            // reorder data first
-            ReorderData(data);
+            if (n == 1)
+                return a;
 
-            // compute FFT
-            int tn = 1, tm;
+            Complex z = new Complex(0.0, 2.0 * Math.PI / n);
+            Complex omegaN = Complex.Exp(z);
+            Complex omega = new Complex(1.0, 0.0);
+            Complex[] a0 = new Complex[n2];
+            Complex[] a1 = new Complex[n2];
+            Complex[] y0 = new Complex[n2];
+            Complex[] y1 = new Complex[n2];
+            Complex[] y = new Complex[n];
 
-            for (int k = 1; k <= m; k++) {
-                Complex[] rotation = FourierTransform.GetComplexRotation(k);
-
-                tm = tn;
-                tn <<= 1;
-
-                for (int i = 0; i < tm; i++) {
-                    Complex t = rotation[i];
-
-                    for (int even = i; even < n; even += tn) {
-                        int odd = even + tm;
-                        Complex ce = data[even];
-                        Complex co = data[odd];
-
-                        double tr = co.Real * t.Real - co.Imaginary * t.Imaginary;
-                        double ti = co.Real * t.Imaginary + co.Imaginary * t.Real;
-
-                        data[even] = new Complex(data[even].Real + tr, data[even].Imaginary + ti);
-
-                        data[odd] = new Complex(ce.Real - tr, ce.Imaginary - ti);
-                    }
-                }
+            for (int i = 0; i < n2; i++) {
+                a0[i] = new Complex(0.0, 0.0);
+                a0[i] = a[2 * i];
+                a1[i] = new Complex(0.0, 0.0);
+                a1[i] = a[2 * i + 1];
             }
 
-            for (int i = 0; i < n; i++) {
-                data[i] = new Complex(data[i].Real / (double)n, data[i].Imaginary / (double)n);
+            y0 = FFT(a0);
+            y1 = FFT(a1);
+
+            for (int k = 0; k < n2; k++) {
+                y[k] = new Complex(0.0, 0.0);
+                y[k] = y0[k] + (y1[k] * omega);
+                y[k + n2] = new Complex(0.0, 0.0);
+                y[k + n2] = y0[k]-(y1[k] * (omega));
+                omega = omega * (omegaN);
             }
-            return data;
+
+            return y;
         }
-        #region Private Region
-
-        private const int minLength = 2;
-        private const int maxLength = 16384;
-        private const int minBits = 1;
-        private const int maxBits = 14;
-        private static int[][] reversedBits = new int[maxBits][];
-        private static Complex[,][] complexRotation = new Complex[maxBits, 2][];
-
-        // Get array, indicating which data members should be swapped before FFT
-        private static int[] GetReversedBits(int numberOfBits)
-        {
-            if ((numberOfBits < minBits) || (numberOfBits > maxBits))
-                throw new ArgumentOutOfRangeException();
-
-            // check if the array is already calculated
-            if (reversedBits[numberOfBits - 1] == null) {
-                int n = Tools.Pow2(numberOfBits);
-                int[] rBits = new int[n];
-
-                // calculate the array
-                for (int i = 0; i < n; i++) {
-                    int oldBits = i;
-                    int newBits = 0;
-
-                    for (int j = 0; j < numberOfBits; j++) {
-                        newBits = (newBits << 1) | (oldBits & 1);
-                        oldBits = (oldBits >> 1);
-                    }
-                    rBits[i] = newBits;
-                }
-                reversedBits[numberOfBits - 1] = rBits;
-            }
-            return reversedBits[numberOfBits - 1];
-        }
-
-        // Get rotation of complex number
-        private static Complex[] GetComplexRotation(int numberOfBits)
-        {
-            int directionIndex = 0;
-
-            // check if the array is already calculated
-            if (complexRotation[numberOfBits - 1, directionIndex] == null) {
-                int n = 1 << (numberOfBits - 1);
-                double uR = 1.0;
-                double uI = 0.0;
-                double angle = System.Math.PI / n * (int)0;
-                double wR = System.Math.Cos(angle);
-                double wI = System.Math.Sin(angle);
-                double t;
-                Complex[] rotation = new Complex[n];
-
-                for (int i = 0; i < n; i++) {
-                    rotation[i] = new Complex(uR, uI);
-                    t = uR * wI + uI * wR;
-                    uR = uR * wR - uI * wI;
-                    uI = t;
-                }
-
-                complexRotation[numberOfBits - 1, directionIndex] = rotation;
-            }
-            return complexRotation[numberOfBits - 1, directionIndex];
-        }
-
-        // Reorder data for FFT using
-        private static void ReorderData(Complex[] data)
-        {
-            int len = data.Length;
-
-            // check data length
-            if ((len < minLength) || (len > maxLength) || (!Tools.IsPowerOf2(len)))
-                throw new ArgumentException("Incorrect data length.");
-
-            int[] rBits = GetReversedBits(Tools.Log2(len));
-
-            for (int i = 0; i < len; i++) {
-                int s = rBits[i];
-
-                if (s > i) {
-                    Complex t = data[i];
-                    data[i] = data[s];
-                    data[s] = t;
-                }
-            }
-        }
-
-        #endregion
     }
 }
