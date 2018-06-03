@@ -22,17 +22,17 @@ namespace WebApp.Controllers
         }
 
         [HttpGet]
-        public Complex[] GenerateSignal(int size, double step)
+        public double[] GenerateSignal(int size, double step)
         {
-            return _signalGenerator.Generate(size, step);
+            return _signalGenerator.Generate(size, step).Select(i=>i.Real).ToArray();
         }
 
         [HttpPost]
-        public FFTResult RunFFT([FromBody]Complex[] signal)
+        public FFTResult RunFFT([FromBody]double[] signal)
         {
             if (signal == null)
                 return null;
-            return _fftService.Run(signal);
+            return _fftService.Run(signal.Select(i => new Complex(i, 0)).ToArray());
         }
     }
 }
