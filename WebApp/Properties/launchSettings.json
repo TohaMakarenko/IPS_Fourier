@@ -16,14 +16,14 @@
 				"ASPNETCORE_ENVIRONMENT": "Development"
 			}
 		},
-		"WebApp": {
-			"commandName": "Project",
-			"launchBrowser": true,
-			"launchUrl": "api/values",
-			"environmentVariables": {
-				"ASPNETCORE_ENVIRONMENT": "Development"
-			},
-			"applicationUrl": "http://localhost:50000/"
-		}
+			"WebApp": {
+				"commandName": "Project",
+				"launchBrowser": true,
+				"launchUrl": "index.html",
+				"environmentVariables": {
+					"ASPNETCORE_ENVIRONMENT": "Development"
+				},
+				"applicationUrl": "http://localhost:50000/"
+			}
 	}
 }

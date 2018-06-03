@@ -28,6 +28,7 @@ namespace WebApp.Controllers
         }
 
         [HttpPost]
+        [RequestSizeLimit(valueCountLimit: 214748364)]
         public FFTResult RunFFT([FromBody]double[] signal)
         {
             if (signal == null)
