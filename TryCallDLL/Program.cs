@@ -38,7 +38,7 @@ namespace TryCallDLL
             double[] result = new double[n];
 
             for (int i = 0; i < n; i++) {
-                result[i] = Math.Sin(i * step) + Math.Cos(i * step * 2);
+                result[i] = Math.Sin(i * step) + Math.Cos(i * step * 2) - i / 10;
             }
 
             return result;
