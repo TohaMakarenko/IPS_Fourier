@@ -16,7 +16,7 @@ namespace WebApp.Services
             var result = new FFTResult();
             Stopwatch sw = new Stopwatch();
             sw.Start();
-            result.Result = FFT.FFT.fft(signal);
+            result.Result = FFT.FourierTransform.FFT(signal);
             sw.Stop();
             result.Time = sw.Elapsed;
             return result;
