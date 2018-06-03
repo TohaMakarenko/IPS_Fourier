@@ -32,6 +32,9 @@ namespace WebApp.Controllers
         {
             if (signal == null)
                 return null;
+            if(signal.Length != 0 && (signal.Length & (signal.Length - 1)) != 0) {
+                return null;
+            }
             return _fftService.Run(signal.Select(i => new Complex(i, 0)).ToArray());
         }
     }
