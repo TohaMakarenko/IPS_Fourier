@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using System.Threading.Tasks;
-using WebApp.Models;
 
-namespace WebApp.Services
+namespace WebApp.Models
 {
-    public interface IFFTService
+    public class FFTResult
     {
-        FFTResult Run(Complex[] signal);
+        public TimeSpan Time { get; set; }
+        public Complex[] Result { get; set; }
     }
 }

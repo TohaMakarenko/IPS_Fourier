@@ -4,6 +4,7 @@ using System.Linq;
 using System.Numerics;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using WebApp.Models;
 
 namespace WebApp.Services
 {
@@ -11,9 +12,9 @@ namespace WebApp.Services
     {
     //    [DllImport("IPS_Fourier.dll", CallingConvention = CallingConvention.Cdecl,
     //SetLastError = true)]
-        static private extern void run(int n, double[] signal, double[] real, double[] imag);
+    //    static private extern void run(int n, double[] signal, double[] real, double[] imag);
 
-        public Complex[] Run(Complex[] signal)
+        public FFTResult Run(Complex[] signal)
         {
             var size = signal.Length;
             var real = new double[size];
@@ -22,9 +23,10 @@ namespace WebApp.Services
             //pzdc
             //run(0, signal.Select(c => c.Real).ToArray(), real, imag);
 
-            var result = new Complex[size];
+            var result = new FFTResult();
+            result.Result = new Complex[size];
             for (int i = 0; i < size; i++) {
-                result[i] = new Complex(real[i], imag[i]);
+                result.Result[i] = new Complex(real[i], imag[i]);
             }
             return result;
         }

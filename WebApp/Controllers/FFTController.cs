@@ -4,6 +4,7 @@ using System.Linq;
 using System.Numerics;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using WebApp.Models;
 using WebApp.Services;
 
 namespace WebApp.Controllers
@@ -27,7 +28,7 @@ namespace WebApp.Controllers
         }
 
         [HttpPost]
-        public Complex[] RunFFT([FromBody]Complex[] signal)
+        public FFTResult RunFFT([FromBody]Complex[] signal)
         {
             if (signal == null)
                 return null;
