@@ -25,15 +25,8 @@ namespace WebApp
         {
             services.AddSingleton<IFFTService, FFTService>();
             services.AddSingleton<ISignalGeneratorService, SignalGenerator>();
-            services.AddSingleton<ISignalStorage, SignalStorage>();
 
             services.AddMvc();
-            services.AddDistributedMemoryCache();
-            services.AddSession(options =>
-            {
-                options.CookieName = ".MyApp.Session";
-                options.IdleTimeout = TimeSpan.FromSeconds(3600);
-            });
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
@@ -43,7 +36,6 @@ namespace WebApp
             }
             app.UseStaticFiles();
             app.UseDefaultFiles();
-            app.UseSession();
             app.UseMvc(routes => {
                 routes.MapRoute(
                     name: "default",

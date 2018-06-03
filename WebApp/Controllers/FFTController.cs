@@ -11,36 +11,24 @@ namespace WebApp.Controllers
     public class FFTController : Controller
     {
         private ISignalGeneratorService _signalGenerator;
-        private ISignalStorage _signalStorage;
         private IFFTService _fftService;
-        const string costyl = "1";
+
         public FFTController(ISignalGeneratorService signalGenerator,
-            ISignalStorage signalStorage,
             IFFTService fftService)
         {
             _signalGenerator = signalGenerator;
-            _signalStorage = signalStorage;
             _fftService = fftService;
         }
 
         [HttpGet]
         public Complex[] GenerateSignal(int size, double step)
         {
-            var signal = _signalGenerator.Generate(size, step);
-            _signalStorage.SetSignal(costyl, signal);
-            return signal;
+            return _signalGenerator.Generate(size, step);
         }
 
-        [HttpGet]
-        public Complex[] GetSignal()
+        [HttpPost]
+        public Complex[] RunFFT([FromBody]Complex[] signal)
         {
-            return _signalStorage.GetSignal(costyl);
-        }
-
-        [HttpGet]
-        public Complex[] RunFFT()
-        {
-            var signal = _signalStorage.GetSignal(costyl);
             if (signal == null)
                 return null;
             return _fftService.Run(signal);
