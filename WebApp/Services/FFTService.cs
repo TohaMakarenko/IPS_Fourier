@@ -9,8 +9,8 @@ namespace WebApp.Services
 {
     public class FFTService : IFFTService
     {
-        [DllImport("IPS_Fourier.dll", CallingConvention = CallingConvention.Cdecl,
-    SetLastError = true)]
+    //    [DllImport("IPS_Fourier.dll", CallingConvention = CallingConvention.Cdecl,
+    //SetLastError = true)]
         static private extern void run(int n, double[] signal, double[] real, double[] imag);
 
         public Complex[] Run(Complex[] signal)

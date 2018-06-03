@@ -23,7 +23,7 @@ namespace WebApp
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<IFFTService, FFTService>();
+            services.AddSingleton<IFFTService, CsFFTService>();
             services.AddSingleton<ISignalGeneratorService, SignalGenerator>();
 
             services.AddMvc();
